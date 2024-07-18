@@ -27,6 +27,7 @@ from ultravox.training import config_base
 from ultravox.training import ddp_utils
 from ultravox.training import evaluation
 
+sys.path.append(os.path.join('/content', 'ultravox-main'))
 INPUT_EXAMPLE = {"text": "Transcribe <|audio|>", "audio": b"\x00\x00" * 16000}
 OUTPUT_EXAMPLE = {"text": "Hello, world!"}
 
@@ -44,7 +45,7 @@ def prepare_dataset(
     num_samples: Optional[int] = None,
 ) -> data.IterableDataset:
 
-    data_sets = [datasets.create_dataset(ds, data_args) for ds in dataset_names]
+    data_sets = [datasets.create_dataset(ds, data_args) for ds in dataset_names]#sending message, or message audio, audio_transcript
     interleave = datasets.InterleaveDataset(data_sets, repeat=repeat_data)
     ds_with_proc = ultravox_processing.UltravoxDataproc(
         interleave, processor=processor, train_on_inputs=train_on_inputs
@@ -295,7 +296,7 @@ def main() -> None:
             trainer.log(metrics)
 
         t_end = datetime.now()
-        logging.info(f"eval end time: {t_end}")
+        logging.info(f"eval end time: {t_end}")                                                                            
         logging.info(f"elapsed: {t_end - t_start}")
 
 
